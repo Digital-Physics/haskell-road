@@ -72,6 +72,23 @@ Prelude> maxBound :: Int
 ```
 Prelude> minBound :: Int
 ```
+### Character Maximum (Unicode)
+
+In Haskell, the `Char` type represents a single **Unicode code point**.
+
+The Prelude> command 
+
+```
+maxBound :: Char
+``` 
+
+returns the largest possible Unicode value:
+
+* **Decimal:** 1,114,111
+* **Hexadecimal/Unicode:** U+10FFFF
+
+This value (U+10FFFF) is the highest possible code point defined by the Unicode standard, encompassing the full range of different ASCII characters, non-english chars, math symbols, emojis, and unassigned points.
+
 #
 converting to an infix operator instead of the standard prefix operator.
 ```

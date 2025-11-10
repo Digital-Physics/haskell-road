@@ -1,3 +1,6 @@
+import Data.List (sort, sortBy)
+import Data.Ord (comparing)
+
 -- minimum of a list of integers
 -- we use pattern matching (and it is sensitive to order)
 -- the list pattern [] matches on empty lists, [x] singleton lists, (x:xs) any non-empty list 
@@ -8,7 +11,7 @@ mnmInt [] = error "empty list"
 mnmInt [x] = x
 mnmInt (x:xs) = min x (mnmInt xs)
 
--- home-made min function
+-- homemade min function
 min' :: Int -> Int -> Int
 min' x y 
     | x <= y    = x
@@ -37,4 +40,56 @@ srtInts' [] = []
 srtInts' xs = let
     m = mnmInt xs
     in m : srtInts' (removeFst m xs)
-    
+
+-- we use built in sum and length functions for lists
+-- fromInegral converts Int to Float, so floating point division with / works
+average :: [Int] -> Float
+average [] = error "empty list"
+average xs = fromIntegral (sum xs) / fromIntegral (length xs)
+
+-- homemade sum and length functions
+sum' :: [Int] -> Int
+sum' [] = 0
+sum' (x:xs) = x + sum' xs
+
+-- notice there is no constraint on a's type, so there is no fat arrow => needed
+length' :: [a] -> Int
+length' [] = 0
+length' (x:xs) = 1 + length' xs
+
+
+-- exercise 1.13 (count occurrences of chars in string)
+-- uses pattern matching and guards
+-- I didn't line up all of the output = signs. should i?
+count :: Char -> String -> Int
+count _ [] = 0
+count m (x: xs) | m == x = 1 + count m xs
+count m (x: xs) = count m xs
+
+-- 1.14
+blowupHelper :: Int -> String -> String
+blowupHelper _ [] = []
+blowupHelper i (x: xs) = replicate i x ++ blowupHelper (i+1) xs 
+
+blowup :: String -> String
+blowup = blowupHelper 1
+
+--1.15
+-- The 'sort' function works directly on [String] because String (which is [Char])
+-- has a built-in 'Ord' instance for alphabetical ordering.
+srtString :: [String] -> [String]
+srtString = sort
+
+-- alternative: read in chars one at a time, left to right, and then use the srtInts :: [Int] -> [Int] or >, <, >= to sort
+srtString' :: [String] -> [String]
+srtString' = sortBy compareStrings
+
+-- Manual comparison: compare strings lexicographically using recursion
+compareStrings :: String -> String -> Ordering
+compareStrings [] [] = EQ
+compareStrings [] _  = LT
+compareStrings _  [] = GT
+compareStrings (x:xs) (y:ys)
+  | x < y     = LT
+  | x > y     = GT
+  | otherwise = compareStrings xs ys

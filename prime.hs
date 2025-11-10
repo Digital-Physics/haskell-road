@@ -1,7 +1,7 @@
 -- rem is a built-in remainder function
 -- Integral is an integer type (i.e. Int or Integer) and not a Float or Double
 -- "For any type a that satisfies the constraint of being an instance of the Integral class, the function takes an a, then a String, and finally returns a Bool."
--- if we were fine with just integer types, our type declaration could just be "divides :: Integer -> Integer -> Bool"
+-- if we were fine with just integer types, our type declaration could just be "divides :: Integer -> Integer -> Bool" which is short for Integer -> (Integer -> Bool).
 divides :: Integral a => a -> a -> Bool
 divides d n = rem n d == 0
 
@@ -12,7 +12,7 @@ ld :: Integral t => t -> t
 ld = ldf 2
 
 -- "equation guarding", is like a if{}-else-if{}...-else{}
---  the expression condition to the lef of the = is the guard
+--  the expression condition to the left of the = is the guard
 -- shorthand for
 -- foo t | condition_i = body_i
 -- foo t | condition_i = body_i
