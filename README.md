@@ -28,7 +28,7 @@ ghci
 :l prime.hs
 ```
 
-:type, :t, "Show the type of an expression (as a 'type judgement' of the form expression :: type)."
+:type, :t, "Show the type of an expression (as a 'type judgement' of the form expression :: type or type scheme)."
 ```
 :t divides 5
 ```
@@ -56,3 +56,29 @@ ghci
 ```
 :r
 ```
+
+#
+The following are reserved keywords and cannot be used to name functions (which always start with a lower-case letter, unlike Constructor identifiers for types):
+
+```
+case, class, data, default, deriving, do, else, if, import, in, infix, infixl, infixr, instance, let, module, newtype, of, then, type, where, -
+```
+#
+9223372036854775807 = 2^63 - 1
+```
+Prelude> maxBound :: Int
+```
+-9223372036854775808
+```
+Prelude> minBound :: Int
+```
+#
+converting to an infix operator instead of the standard prefix operator.
+```
+max 4 5
+```
+
+```
+4 `max` 5
+```
+conversely, an infix operator is made a prefix operator by putting it in round brackets
