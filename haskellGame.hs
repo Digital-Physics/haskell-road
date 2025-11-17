@@ -75,8 +75,7 @@ blowup :: String -> String
 blowup = blowupHelper 1
 
 --1.15
--- The 'sort' function works directly on [String] because String (which is [Char])
--- has a built-in 'Ord' instance for alphabetical ordering.
+-- The 'sort' function works directly on [String] because String (which is [Char]) has a built-in 'Ord' instance for alphabetical ordering.
 srtString :: [String] -> [String]
 srtString = sort
 
@@ -93,3 +92,16 @@ compareStrings (x:xs) (y:ys)
   | x < y     = LT
   | x > y     = GT
   | otherwise = compareStrings xs ys
+
+--1.16
+prefix :: String -> String -> Bool
+prefix [] ys = True
+prefix (x:xs) [] = False
+prefix (x:xs) (y:ys) = (x==y) && prefix xs ys
+
+--1.17 (Note: we use just xs and not (x:xs) when we don't need the head or tail of the list )
+substring :: String -> String -> Bool
+substring [] ys = True
+substring xs [] = False
+substring xs (y:ys) = prefix xs (y:ys) || substring xs ys
+

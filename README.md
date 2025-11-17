@@ -99,3 +99,41 @@ max 4 5
 4 `max` 5
 ```
 conversely, an infix operator is made a prefix operator by putting it in round brackets
+
+```
+2^3
+```
+
+```
+(^) 2 3
+```
+
+### construction of sections
+
+If **op** is an infix operator  
+
+**(op x)** is the operation resulting from applying op to its right hand side argument
+
+#### 1000
+```
+(^3) 10
+```
+
+#### 1024
+```
+(2^) 10
+```
+
+***(x op)** is the operation resulting from
+applying op to its left hand side argument
+
+### greater than 3
+```
+greaterThanThree :: Integral a => a -> Bool
+greaterThanThree = (>3)
+```
+#
+Note about "=" in Haskell:
+
+= is not destructive assignment operator like in many other languages; it is used to represent equality like how a math equation uses '='
+
