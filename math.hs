@@ -1,4 +1,6 @@
 --Chapter 2
+module Math where
+
 -- Are Haskellers Platonists for accepting the non-constructive proof by contradiction?
 
 -- Connectives (if-then =>, and ^, or V, not -|, if and only if/iff; <=>; (aka 'just in case'?))
