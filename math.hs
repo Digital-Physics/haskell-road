@@ -583,3 +583,76 @@ solveQdr = \ (a,b,c) -> if a == 0 then error "not quadratic"
 
 -- 2.49 discontinuous 
 -- ¬ ∀ε > 0 ∃δ > 0 ∀y ( |x − y| < δ =⇒ |f(x) − f(y)| < ε ).
+-- ∃ε > 0 ∀δ > 0 ∃y ¬ ( |x − y| < δ =⇒ |f(x) − f(y)| < ε ).
+-- ∃ε > 0 ∀δ > 0 ∃y ( |x − y| < δ ∧ |f(x) − f(y)| > ε ).
+
+-- 2.50
+-- a0, a1, a2, . . . ∈ R converges to a:lim n→∞ a_n = a, means that 
+-- ∀δ > 0,∃n,∀m > n, (|a − a_m| < δ)
+-- Doesn't converge:
+-- ¬ (∀δ > 0, ∃n, ∀m > n, (|a − a_m| < δ))
+-- use the following equivalences to make a positive equivalent of the statement without the not:
+-- ¬ (∀x P(x)) <=> ∃x ¬P(x)
+-- ¬ (∃x, P(x)) <=> ∀x ¬P(x)
+-- ¬ (a < b) <=> (a >= b)
+--
+-- ∃δ > 0, ∀n, ∃m > n, (|a − a_m| < δ))
+--
+-- Translation:
+-- There exists a specific distance delta such that, no matter how far down the sequence you go (for all n), 
+-- you can always find a later term (a_m) that is at least delta distance away from a.
+
+-- 2.8 Quantifiers as procedures
+-- If we implement sets as lists, it is straightforward to implement ∀ (all) and ∃ (any)
+
+-- pass the function that takes type a and checks for property, pass the list of a, and get back a True/False of whether it holds for any or all
+-- any, all :: (a -> Bool) -> [a] -> Bool
+-- any p = or . map p
+-- all p = and . map p
+
+-- why not "all p"? (it has "all" built in already)
+all' :: (a -> Bool) -> [a] -> Bool
+all' p = and . map p
+
+-- and :: [Bool] -> Bool
+-- all elements of a list xs satisfy a property p = map p xs contains only True 
+-- above, it is first apply map p, then apply (with composition "and after map" .) and
+
+-- why not "any p" suggestion pops up; it has "any" built in already
+any' :: (a -> Bool) -> [a] -> Bool
+any' p = or . map p
+
+-- or :: [Bool] -> Bool
+-- some element of a list xs satisfy a property p = map p xs contains at least one True 
+-- above, it is first apply map p, then apply or
+
+-- Prelude> any (<3) [0..]
+-- True
+-- Prelude>  all (<3) [0..]
+-- False
+
+-- similar, but the argument input is reversed
+every, some :: [a] -> (a -> Bool) -> Bool
+every xs p = all p xs
+some xs p = any p xs
+
+
+-- ∀x ∈ {1, 4, 9}, ∃y ∈ {1, 2, 3} (x = y^2)
+-- *Main> every [1,4,9] (\ x -> some [1,2,3] (\ y -> x == y^2))
+-- True
+
+-- runs forever. the quantifiers are procedures, not "algorithms" (that terminate?)
+-- every [0..] (>=0)
+
+-- 2.51
+unique :: (a -> Bool) -> [a] -> Bool
+unique p xs = length (filter p xs) == 1
+
+--2.52
+parity :: [Bool] -> Bool
+parity xs = even (length (filter (== True) xs))
+
+-- 2.53
+evenNR :: (a -> Bool) -> [a] -> Bool
+evenNR p xs = parity (map p xs)
+
