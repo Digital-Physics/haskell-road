@@ -114,3 +114,77 @@ checkAllEven = every [ m + n | m <- evens, n <- evens ] even --This will not ter
 -- Therefore (Q ⇒ R) ⇒ (P ⇒ R).
 
 -- Hence (P ⇒ R) ⇔ (Q ⇒ R).
+
+
+-- Advice: Avoid negations by transforming proofs (proof by contradiction)
+
+-- Given: . . .
+-- To be proved: ¬Φ
+-- Proof:
+    -- Suppose Φ
+    -- To be proved: ⊥
+    -- Proof: . . .
+-- Thus ¬Φ.
+
+-- 3.7
+-- Given: P ⇒ Q
+-- To prove: ¬Q ⇒ ¬P
+
+-- Proof:
+    -- Assume ¬Q. We must show ¬P.
+    -- Assume P. From P and P ⇒ Q we conclude Q. But this contradicts ¬Q.
+    -- Therefore the assumption P leads to a contradiction, so ¬P.
+-- Hence ¬Q ⇒ ¬P.
+
+-- 3.8 From ¬Q ⇒ ¬P it follows that P ⇒ Q.
+
+-- Given: ¬Q ⇒ ¬P
+-- To be proved: P ⇒ Q
+-- Detailed proof:
+--     Suppose P
+--     To be proved: Q
+--     Proof:
+--         Suppose ¬Q
+--         To be proved: ⊥
+--         Proof:
+--         From ¬Q and ¬Q ⇒ ¬P derive ¬P.
+--         From P and ¬P derive ⊥.
+
+--     Thus, Q, by contradiction.
+-- Thus, P ⇒ Q, by the Deduction Rule.
+
+-- Concise proof:
+--     Assume that P.
+--     If ¬Q, then (by ¬Q ⇒ ¬P) it follows that ¬P.
+--     Contradiction.
+
+
+
+-- Disjunction
+
+-- Introduction:
+
+-- Schematically:
+-- Given: Φ
+-- Thus Φ ∨ Ψ.
+
+-- Given: Ψ
+-- Thus Φ ∨ Ψ.
+
+-- Safety is immediate from the truth tables.
+
+-- Elimination:
+-- You can use a given Φ ∨ Ψ by giving two proofs: one employing Φ, and one employing Ψ.
+
+-- Given: Φ ∨ Ψ, . . .
+-- To be proved: Λ
+-- Proof:
+--     Suppose Φ
+--     To be proved: Λ
+--     Proof: . . .
+--     Suppose Ψ
+--     To be proved: Λ
+--     Proof: . . .
+-- Thus Λ
+
+-- Side Note: For chip design, proof is helpful before sending you FPGA to be made: https://clash-lang.org
