@@ -74,6 +74,14 @@ blowupHelper i (x: xs) = replicate i x ++ blowupHelper (i+1) xs
 blowup :: String -> String
 blowup = blowupHelper 1
 
+-- you can just embed the helper function
+blowup' :: String -> String
+blowup' = blowupHelper' 1
+  where
+    blowupHelper' :: Int -> String -> String
+    blowupHelper' _ [] = []
+    blowupHelper' i (x: xs) = replicate i x ++ blowupHelper (i+1) xs
+
 --1.15
 -- The 'sort' function works directly on [String] because String (which is [Char]) has a built-in 'Ord' instance for alphabetical ordering.
 srtString :: [String] -> [String]

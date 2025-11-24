@@ -119,7 +119,7 @@ formula2 p q = (not p) && (p ==> q) <=> not (q && (not p))
 
 -- validity check for just one variable (bf is Boolaean Function)
 valid1 :: (Bool -> Bool) -> Bool
-valid1 bf = (bf True) && (bf False)
+valid1 bf = bf True && bf False
 
 -- excluded middle; no third possibility
 -- P ∨ ¬P
@@ -150,7 +150,10 @@ form2 p q = (p ==> q) ==> p
 -- *Main> valid2 formula2
 -- False
 
-
+-- bf is a Boolean Function 3 and 4?
+--  p <- [True,False]   
+-- “p is an element of the list consisting of the two truth values”, is an example of list comprehension
+-- and is predefined conjunction 
 valid3 :: (Bool -> Bool -> Bool -> Bool) -> Bool
 valid3 bf = and [ bf p q r | p <- [True,False],
                              q <- [True,False],
@@ -161,3 +164,422 @@ valid4 bf = and [ bf p q r s | p <- [True,False],
                                q <- [True,False],
                                r <- [True,False],
                                s <- [True,False]]
+
+-- Operator Precedence; binding order (precedence)
+-- == binds more strongly
+-- == (4), && (3), || (2), ==> <=> (1)
+
+-- 'logically equivalent' = same truth table
+-- you can check De Morgan's Law ¬ (P ∧ Q) ⇔ (¬ P ∨ ¬ Q)
+
+-- ⊕ = xor
+
+-- 2.9
+-- (P ⊕ Q) ⊕ Q is equivalent to P  (imagine Screen and Cursor as bits)
+
+-- propositional function of one parameter
+-- Φ, Ψ with a single propositional variable, is testing the formula Φ ⇔ Ψ by the truth table method.
+-- e.g.
+-- Φ, bf1: True -> False, False -> True
+-- Ψ, bf2: T -> F, F -> F
+-- function checks if they both act the same under True and then False inputs 
+-- the example above would be False because Φ, Ψ return different values on False inputs
+logEquiv1 :: (Bool -> Bool) -> (Bool -> Bool) -> Bool
+logEquiv1 bf1 bf2 =
+    (bf1 True <=> bf2 True) && (bf1 False <=> bf2 False)
+
+-- we can extend it to Boolean Functions with more arguments using a list comprehension
+-- Boolean Function of two input arguments
+logEquiv2 :: (Bool -> Bool -> Bool) -> (Bool -> Bool -> Bool) -> Bool
+logEquiv2 bf1 bf2 = and [bf1 p q <=> bf2 p q | p <- [True,False], q <- [True,False]]
+
+-- the | seems to act as a "for" in a list comprehension instead of a "guard" in a function
+-- this function iterates over all 2^3 = 8 possible True/False input possibilities F F F, F F T, etc.
+logEquiv3 :: (Bool -> Bool -> Bool -> Bool) -> (Bool -> Bool -> Bool -> Bool) -> Bool
+logEquiv3 bf1 bf2 = and [ bf1 p q r <=> bf2 p q r | p <- [True,False],
+                                                    q <- [True,False],
+                                                    r <- [True,False]]
+
+-- "by computer"
+--  show (P ⊕ Q) ⊕ Q is equivalent to P
+-- P=F Q=F -> F 
+-- P=F Q=T -> F 
+-- P=T Q=F -> T 
+-- P=T Q=T -> T 
+
+-- P
+-- needs two arguments even though we just take P, like above
+formula3 :: Bool -> Bool -> Bool
+formula3 p q = p
+
+-- (P ⊕ Q) ⊕ Q
+formula4 :: Bool -> Bool -> Bool 
+formula4 p q = (p <+> q) <+> q
+
+
+-- *Main> logEquiv2 formula3 formula4
+-- True
+
+
+
+formula5 :: Bool -> Bool -> Bool
+formula5 p q = p <=> ((p <+> q) <+> q)
+
+-- truth table test:
+-- remember, logically valid propositional formulas evaluate to True no matter the Boolean input values
+-- validity check that a Boolean Function of Two variables checks that all 4 possible inputs evaluate to True
+-- valid2 :: (Bool -> Bool -> Bool) -> Bool
+-- valid2 bf = (bf True True)
+--             && (bf True False)
+--             && (bf False True)
+--             && (bf False False)
+
+-- *Main> valid2 formula5
+-- True
+
+-- 2.10
+-- A number of useful equivalences
+-- And P, Q, and R can be arbitrary formulas themselves
+
+-- 1. P ≡ ¬¬P (law of double negation),
+-- 2. P ∧ P ≡ P; P ∨ P ≡ P (laws of idempotence),
+-- 3. (P ⇒ Q) ≡ ¬P ∨ Q;
+-- ¬(P ⇒ Q) ≡ P ∧ ¬Q,
+-- 4. (¬P ⇒ ¬Q) ≡ (Q ⇒ P);
+-- (P ⇒ ¬Q) ≡ (Q ⇒ ¬P);
+-- (¬P ⇒ Q) ≡ (¬Q ⇒ P) (laws of contraposition),
+-- 5. (P ⇔ Q) ≡ ((P ⇒ Q) ∧ (Q ⇒ P))
+-- ≡ ((P ∧ Q) ∨ (¬P ∧ ¬Q)),
+-- 6. P ∧ Q ≡ Q ∧ P; P ∨ Q ≡ Q ∨ P (laws of commutativity),
+-- 7. ¬(P ∧ Q) ≡ ¬P ∨ ¬Q;
+-- ¬(P ∨ Q) ≡ ¬P ∧ ¬Q (DeMorgan laws).
+-- 8. P ∧ (Q ∧ R) ≡ (P ∧ Q) ∧ R;
+-- P ∨ (Q ∨ R) ≡ (P ∨ Q) ∨ R (laws of associativity),
+-- 9. P ∧ (Q ∨ R) ≡ (P ∧ Q) ∨ (P ∧ R);
+-- P ∨ (Q ∧ R) ≡ (P ∨ Q) ∧ (P ∨ R) (distribution laws),
+
+
+-- 2.11
+-- (Truth Table created in 2.6 ✅)
+-- ¬(P ∧ Q) ≡ ¬P ∨ ¬Q 
+
+-- the other part of DeMorgan's law:
+-- ¬(P ∨ Q) ≡ ¬P ∧ ¬Q 
+
+-- P | Q | not (P || Q) | not P && not Q
+-- F   F        T               T
+-- F   T        F               F
+-- T   F        F               F
+-- T   T        F               F
+
+-- λp.¬¬p
+-- \ p -> not (not p)
+
+test1 :: Bool
+test1 = logEquiv1 id (\ p -> not (not p))
+
+test2a :: Bool
+test2a = logEquiv1 id (\ p -> p && p)
+
+test2b :: Bool
+test2b = logEquiv1 id (\ p -> p || p)
+
+test3a :: Bool
+test3a = logEquiv2 (\ p q -> p ==> q) (\ p q -> not p || q)
+
+test3b :: Bool
+test3b = logEquiv2 (\ p q -> not (p ==> q)) (\ p q -> p && not q)
+
+test4a :: Bool
+test4a = logEquiv2 (\ p q -> not p ==> not q) (\ p q -> q ==> p)
+
+test4b :: Bool
+test4b = logEquiv2 (\ p q -> p ==> not q) (\ p q -> q ==> not p)
+
+test4c :: Bool
+test4c = logEquiv2 (\ p q -> not p ==> q) (\ p q -> not q ==> p)
+
+test5a :: Bool
+test5a = logEquiv2 (\ p q -> p <=> q) (\ p q -> (p ==> q) && (q ==> p))
+
+test5b :: Bool
+test5b = logEquiv2 (\ p q -> p <=> q) (\ p q -> (p && q) || (not p && not q))
+
+test6a :: Bool
+test6a = logEquiv2 (\ p q -> p && q) (\ p q -> q && p)
+
+test6b :: Bool
+test6b = logEquiv2 (\ p q -> p || q) (\ p q -> q || p)
+
+test7a :: Bool
+test7a = logEquiv2 (\ p q -> not (p && q)) (\ p q -> not p || not q)
+
+test7b :: Bool
+test7b = logEquiv2 (\ p q -> not (p || q)) (\ p q -> not p && not q)
+
+test8a :: Bool
+test8a = logEquiv3 (\ p q r -> p && (q && r)) (\ p q r -> (p && q) && r)
+
+test8b :: Bool
+test8b = logEquiv3 (\ p q r -> p || (q || r)) (\ p q r -> (p || q) || r)
+
+test9a :: Bool
+test9a = logEquiv3 (\ p q r -> p && (q || r)) (\ p q r -> (p && q) || (p && r))
+
+test9b :: Bool
+test9b = logEquiv3 (\ p q r -> p || (q && r)) (\ p q r -> (p || q) && (p || r))
+
+-- *Main> test5a
+-- True
+-- *Main> test1
+-- True
+
+-- T (the proposition that is always true; the Haskell counterpart is True) and 
+-- ⊥ (the proposition that is always false; the Haskell counterpart of this is False).
+
+-- 1. ¬T ≡ ⊥; ¬⊥ ≡ >,
+-- 2. P ⇒ ⊥ ≡ ¬P,
+-- 3. P ∨ T ≡ T; P ∧ ⊥ ≡ ⊥ (dominance laws),
+-- 4. P ∨ ⊥ ≡ P; P ∧ T ≡ P (identity laws),
+-- 5. P ∨ ¬P ≡ T (law of excluded middle),
+-- 6. P ∧ ¬P ≡ ⊥ (contradiction).
+
+
+-- substitution principle example:
+-- ¬(P ⇒ Q) ≡ P ∧ ¬Q 
+-- substituting ¬P for P
+--  substituting "a = 2^b − 1" for P and "a is prime" for Q
+-- ¬(a = 2^b − 1 ⇒ a is prime) ≡ a = 2^b − 1 ∧ a is not prime
+
+-- 2.15
+-- Testing for contradictions for proposition variable (Bool -> Bool) (these take one input)
+-- We'll test all possible inputs (True, False) to make sure they all evaluate to False
+-- e.g. propTest q = q <=> not q
+contradictionTest1 :: (Bool -> Bool) -> Bool
+contradictionTest1 bf = not (bf True) && not (bf False)
+
+propTest :: Bool -> Bool
+propTest p = p <=> not p
+
+-- *Main> contradictionTest1 propTest
+-- True
+
+contradictionTest2 :: (Bool -> Bool -> Bool) -> Bool
+contradictionTest2 bf = not (bf False False) && 
+                        not (bf False True) &&
+                        not (bf True False) &&
+                        not (bf True True)
+
+propTest2 :: Bool -> Bool -> Bool
+propTest2 p q = p && q <=> not (p && q)
+
+-- *Main> contradictionTest2 propTest2
+-- True
+
+
+-- 2.17
+denialXYZ :: Double -> Double -> Double -> Bool
+denialXYZ x y z = not (x < y && y < z)
+
+-- *Main> denialXYZ 5 6 7
+-- False
+-- *Main> denialXYZ 5 5 5
+-- True
+-- *Main> denialXYZ 5.5 6.65 7.767
+-- False
+-- *Main> denialXYZ 5.55 5.233 5.55
+-- True
+
+-- 2.18
+-- Φ,Ψ,¬Φ,¬Ψ,Φ⇔Ψ,¬Φ⇔¬Ψ
+-- T,T,F,F,T,T
+-- T,F,F,T,F,F
+-- F,T,T,F,F,F
+-- F,F,T,T,T,T
+
+-- Φ,Ψ,¬Φ,¬Ψ,¬Φ⇔Ψ,Φ⇔¬Ψ
+-- T,T,F,F,F,F
+-- T,F,F,T,T,T
+-- F,T,T,F,T,T
+-- F,F,T,T,F,F
+
+-- 2.19
+
+-- We won't show Φ ≡ Ψ is true iff Φ ⇔ Ψ is logically valid, 
+-- but if we were to, we would show that assuming one implies the other in both directions
+
+-- Logical Equivalence,
+-- Φ≡Ψ,
+-- Φ and Ψ have the same truth value in every possible row of the truth table.
+-- So the propositions should same number of arguments and the same overall True False value in each input possibility.
+
+-- Logical Validity
+-- Φ⇔Ψ
+-- The formula Φ⇔Ψ is a tautology (always True in every possible row of the truth table).
+
+-- 2.20
+-- which are equivalent?
+
+-- 1. ¬P ⇒ Q and P ⇒ ¬Q,
+test2_20_1 :: Bool
+test2_20_1 = logEquiv2 (\ p q -> not p ==> q) (\ p q -> p ==> not q)
+
+-- *Main> test2_20_1
+-- False
+
+
+-- 2. ¬P ⇒ Q and Q ⇒ ¬P,
+
+test2_20_2 :: Bool
+test2_20_2 = logEquiv2 (\ p q -> not p ==> q) (\ p q -> q ==> not p)
+
+-- *Main> test2_20_2
+-- False
+
+-- 3. ¬P ⇒ Q and ¬Q ⇒ P,
+
+test2_20_3 :: Bool
+test2_20_3 = logEquiv2 (\ p q -> not p ==> q) (\ p q -> not q ==> p)
+
+-- *Main> test2_20_3
+-- True
+
+-- 4. P ⇒ (Q ⇒ R) and Q ⇒ (P ⇒ R),
+
+test2_20_4 :: Bool
+test2_20_4 = logEquiv3 (\ p q r -> not p ==> (q ==> r)) (\ p q r -> q ==> (p ==> r))
+
+-- 5. P ⇒ (Q ⇒ R) and (P ⇒ Q) ⇒ R,
+
+test2_20_5 :: Bool
+test2_20_5 = logEquiv3 (\ p q r -> not p ==> (q ==> r)) (\ p q r -> (p ==> q) ==> r)
+
+-- 6. (P ⇒ Q) ⇒ P and P,
+
+test2_20_6 :: Bool
+test2_20_6 = logEquiv2 (\ p q -> (p ==> q) ==> p) (\ p q -> p)
+
+-- 7. P ∨ Q ⇒ R and (P ⇒ R) ∧ (Q ⇒ R).
+
+test2_20_7 :: Bool
+test2_20_7 = logEquiv3 (\ p q r -> (p || q) ==> r) (\ p q r -> (p ==> r) && (q ==> r))
+
+-- *Main> test2_20_4
+-- False
+-- *Main> test2_20_5
+-- False
+-- *Main> test2_20_6
+-- True
+-- *Main> test2_20_7
+-- True
+
+exercise2_21_1 :: Bool -> Bool -> Bool
+exercise2_21_1 x y  | not x && y = False
+                    | otherwise = True
+
+-- *Main> exercise2_21_1 False False
+-- True
+-- *Main> exercise2_21_1 False True
+-- False
+-- *Main> exercise2_21_1 True False
+-- True
+-- *Main> exercise2_21_1 True True
+-- True
+
+-- 2.21.2, 2.21.3
+-- There are 4 rows, each of them could be true or false overall, 
+-- so there are 2^4 = 16 truth tables for formulas with two variables
+-- here's the first:
+-- PQΦ
+-- FFF
+-- FTF
+-- TFF
+-- TTF
+
+-- 2.21.4 Formulas of two variables could be any length, so enumerate symbols and start with the shorter ones
+-- 2.21.5 Formulas of three variables could be any length, so enumerate symbols and start with the shorter ones
+
+-- ∀x,z∈Q ( x < z ⇒ ∃y∈Q ( x < y ∧ y < z ) ).
+-- 2.22 Proof: Let y = (x + z) / 2
+
+-- ∀, universal quantifier; for all
+-- ∃, existential quantifier; there exists
+
+-- N for the natural numbers, Z for the integer numbers, Q for the rational numbers, and R for reals
+
+-- 2.26
+-- 1. ∃x,y ∈ Q(x < y) ...
+
+-- 2.27
+-- 1. ∀ x ∈ Q ∃ m,n ∈ Z(x = m/n).
+
+--Bound Variable
+-- ∃y ∈ Q(x < y) has the same meaning as ∃z ∈ Q(x < z)
+-- ∃y ∈ Q(x < y) has a different meaning ∃y ∈ Q(z < y)
+
+-- Prelude> sum [ i | i <- [1..5] ]
+-- 15
+-- Prelude> sum [ n | n <- [1..5] ]
+-- 15
+
+-- 2.31.1
+-- ∃x ∈ C (x^2 + 1 = 0)
+
+-- 2.32.1
+-- ∀x ∈ People (L(x,d))
+
+-- 2.36.1
+-- There exist x in the Reals such that x squared equals 5.
+
+square1 :: Integer -> Integer
+square1 x = x^2
+
+square2 :: Integer -> Integer
+square2 = \ x -> x^2
+
+-- Either works as a lambda function for passing arguments; second is better
+m1 :: Integer -> Integer -> Integer
+m1 = \ x -> \ y -> x*y
+
+m2 :: Integer -> Integer -> Integer
+m2 = \ x y -> x*y
+
+solveQdr :: (Float,Float,Float) -> (Float,Float)
+solveQdr = \ (a,b,c) -> if a == 0 then error "not quadratic"
+                        else let d = b^2 - 4*a*c in
+                        if d < 0 then error "no real solutions"
+                        else ((- b + sqrt d) / 2*a, (- b - sqrt d) / 2*a)
+
+-- *Main> solveQdr (1, -1, -1)
+-- (1.618034,-0.618034)
+
+-- predicate name P for the primes
+-- P(n) :≡ n > 1 ∧ ∀m((1 < m < n) ⇒ ¬m|n). 
+-- P(n) :≡ n > 1 ∧ ∀m((1 < m ∧ m^2 <= n) ⇒ ¬m|n).
+-- P(n) :≡ n > 1 ∧ LD(n) = n
+
+-- 2.6 Abstract Formulas and Concrete Structures
+
+-- what is R operator, or context or structure? what is the domain of quantification? The truth value depends on that.
+-- ∀x ∀y ( xRy =⇒ ∃z ( xRz ∧ zRy ) ).
+
+-- Free variables
+-- An open formula can be turned into a statement in two ways: 
+-- (i) adding quantifiers that bind the free variables; 
+-- (ii) replacing the free variables by (names of) objects in the domain (or stipulating that they have such objects as values).
+
+-- 2.37.a 
+-- 1) False
+-- 2) True 
+-- 3) True (0)
+
+-- 2.43 continuity
+-- ∀x ∀ε > 0 ∃δ > 0 ∀y ( |x − y| < δ ==> |f(x) − f(y)| < ε ).
+
+--2.46 Not the same; Let A be the subset of numbers less than 2 and Φ(x) be isPrime
+-- ¬∃x ∈ A Φ(x) is not equivalent to ∃x not-∈ A Φ(x)
+-- ¬∃x ∈ A Φ(x) says there isn't a number less than 2 that is prime, which is true
+-- ∃x not-∈ A Φ(x) says there exists a number greater than or equal to 2 that is prime, which is also true but a different statement
+
+-- 2.49 discontinuous 
+-- ¬ ∀ε > 0 ∃δ > 0 ∀y ( |x − y| < δ =⇒ |f(x) − f(y)| < ε ).
