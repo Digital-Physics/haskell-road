@@ -1,8 +1,8 @@
-{-# LANGUAGE InstanceSigs #-}
+-- {-# LANGUAGE InstanceSigs #-}
 module Chapter4 where
 
 import qualified Data.Set as Set --qualified removes ambiguity and forces explicit calls of functions with same names as others in scope
-import Data.List (delete)
+import Data.List (delete) -- selective import of delete, which deletes first occurrence in list
 
 
 naturals :: [Integer]
@@ -149,7 +149,7 @@ newtype Set a = Set [a] deriving (Show)
 
 -- Equality instance for Set: ignores order of elements
 instance Eq a => Eq (Set a) where
-  (==) :: Eq a => Set a -> Set a -> Bool
+  -- (==) :: Eq a => Set a -> Set a -> Bool  -- can't do this type signature without InstanceSigs
   set1 == set2 = subSet set1 set2 && subSet set2 set1
 
 -- Create an empty set
